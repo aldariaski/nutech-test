@@ -2,12 +2,15 @@ package com.nutech.nutech.entity;
 
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Data
+@Table(name = "usertab")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +20,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonProperty("first_name")
     @Column(nullable = false)
     private String firstName;
 
+    @JsonProperty("last_name")
     @Column(nullable = false)
     private String lastName;
 

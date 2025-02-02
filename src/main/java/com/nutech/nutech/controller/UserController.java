@@ -7,6 +7,7 @@ import com.nutech.nutech.service.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import  org.springframework.web.multipart.*;
@@ -15,6 +16,7 @@ import java.io.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 @RequestMapping("/api")
@@ -23,8 +25,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Value("${jwt.secret}")
+    private String secretKey; // Inject the key from configuration
+
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    //public ResponseEntity<?> registerUser(@RequestBody User user) {
+        public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (user.getEmail() == null || !user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             Map<String, Object> response = new HashMap<>();
             response.put("status", 102);
@@ -52,6 +58,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> credentials) {
+        
         String email = credentials.get("email");
         String password = credentials.get("password");
 
@@ -76,7 +83,7 @@ public class UserController {
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000)) // 12 jam
-                .signWith(SignatureAlgorithm.HS512, "secret")
+                .signWith(SignatureAlgorithm.HS512, secretKey) //coba HS512
                 .compact();
 
         Map<String, Object> response = new HashMap<>();

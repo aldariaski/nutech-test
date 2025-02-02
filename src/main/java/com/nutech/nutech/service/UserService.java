@@ -3,8 +3,10 @@ package com.nutech.nutech.service;
 
 import com.nutech.nutech.entity.*;
 import com.nutech.nutech.repository.*;
-import com.nutech.nutech.config.*;
+//import com.nutech.nutech.config.*;
+//import com.nutech.nutech.config.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import  org.springframework.web.multipart.*;
@@ -26,7 +28,16 @@ public class UserService {
 
     private final String uploadDir = "uploads/";
 
+    @Value("${jwt.secret}")
+    private String secretKey; // Inject the key from configuration
+
     public User registerUser(User user) {
+    //public User registerUser(String email, String first_name, String last_name, String password) {    
+        /*User user = new User();
+        user.setEmail(email);
+        user.setFirstName(first_name);
+        user.setLastName(last_name);
+        user.setPassword(passwordEncoder.encode(password));*/
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

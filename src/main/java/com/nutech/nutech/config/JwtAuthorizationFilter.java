@@ -1,4 +1,4 @@
-package com.nutech.nutech;
+package com.nutech.nutech.config;
 
 import com.nutech.nutech.*;
 import com.nutech.nutech.controller.*;
@@ -10,6 +10,9 @@ import com.nutech.nutech.service.*;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,8 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
+    @Value("${jwt.secret}")
+    private String secretKey; // Inject the key from configuration
 
     public JwtAuthorizationFilter(AuthenticationManager authManager) {
         super(authManager);
@@ -51,7 +56,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader("Authorization");
         if (token != null) {
             Claims claims = Jwts.parser()
-                    .setSigningKey("secret")
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(token.replace("Bearer ", ""))
                     .getBody();
 
