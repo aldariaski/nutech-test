@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for nutech-fakhri on 2025-02-02T18:43:51+07:00
+# fly.toml app configuration file generated for medex on 2025-02-02T18:55:16+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'nutech-fakhri'
+app = 'medex'
 primary_region = 'sin'
 
 [http_service]
