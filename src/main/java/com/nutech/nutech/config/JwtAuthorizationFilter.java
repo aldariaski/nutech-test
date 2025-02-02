@@ -5,6 +5,7 @@ import com.nutech.nutech.controller.*;
 import com.nutech.nutech.entity.*;
 import com.nutech.nutech.repository.*;
 import com.nutech.nutech.service.*;
+import com.nutech.nutech.service.CustomUserDetailsService;
 
 
 import io.jsonwebtoken.Claims;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,7 +55,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+        /*String token = request.getHeader("Authorization");
+        System.out.println("Hi this is UsernamePasswordAuthenticationToken ");
         if (token != null) {
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)
@@ -67,6 +70,27 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             }
             return null;
         }
+        return null;*/
+
+        String token = request.getHeader("Authorization");
+        if (token != null) {
+            Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token.replace("Bearer ", ""))
+                .getBody();
+
+        String email = claims.getSubject();
+
+        if (email != null) {
+            // Load the user from the database
+            //UserDetails userDetails = CustomUserDetailsService.loadUserByUsername(email);
+            //return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
+            
+        }
         return null;
+    }
+    return null;
+
     }
 }

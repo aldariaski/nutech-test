@@ -57,16 +57,29 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        
     }
+    
     
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
         //SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-        //String secretString = Encoders.BASE64.encode(key.getEncoded()); // Encode the key to a Base64 string    
-        String token = Jwts.builder()
+        //String secretString = Encoders.BASE64.encode(key.getEncoded()); // Encode the key to a Base64 string   
+        User user = (User) auth.getPrincipal(); 
+
+        /*String token = Jwts.builder()
                 .setSubject(((User) auth.getPrincipal()).getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000)) // 12 hours
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
+        res.addHeader("Authorization", "Bearer " + token);*/
+
+        String token = Jwts.builder()
+            .setSubject(user.getUsername())
+            .setExpiration(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000)) // 12 hours
+            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .compact();
         res.addHeader("Authorization", "Bearer " + token);
+
+        System.out.println("Hi this is succesful authentication " + token);
     }
 }

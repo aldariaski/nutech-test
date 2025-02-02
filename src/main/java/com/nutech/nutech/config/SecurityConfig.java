@@ -38,8 +38,8 @@ public class SecurityConfig  {
         http.csrf(csrf -> csrf.disable()) // Disable CSRF
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/registration", "/api/login").permitAll() // Allow access to these endpoints
-                .anyRequest().permitAll() // Require authentication for all other requests
-                //.anyRequest().authenticated()
+                //.anyRequest().permitAll() // Require authentication for all other requests
+                .anyRequest().authenticated()
             );
         return http.build();
     }

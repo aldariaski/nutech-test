@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import  org.springframework.web.multipart.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 
 import java.io.*;
 import java.nio.file.*;
@@ -51,7 +52,18 @@ public class UserService {
     }
 
     public User getProfile() {
-        String email = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        //Old way - should be updated according to 
+        //String email = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        //Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        //String email = loggedInUser.getCredentials().getEmail();
+
+        String email = ((UserDetails) 
+            SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal())
+            .getUsername();
+        System.out.println("Hi this email is " + email);
         return userRepository.findByEmail(email);
     }
 
